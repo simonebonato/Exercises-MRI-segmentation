@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# extra git ignore
+best_models
+Task04_Hippocampus
+lightning_logs
