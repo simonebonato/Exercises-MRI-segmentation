@@ -1,11 +1,9 @@
 import os
-import torch
 import torchio as tio
 import pytorch_lightning as pl
 from torch.utils.data import DataLoader, random_split
 import gdown
 from pathlib import Path
-
 
 class MedicalDecathlonDataModule(pl.LightningDataModule):
     def __init__(self, task, google_id, batch_size, train_val_ratio):
@@ -96,7 +94,7 @@ class MedicalDecathlonDataModule(pl.LightningDataModule):
         self.test_set = tio.SubjectsDataset(self.test_subjects, transform=self.preprocess)
 
     def train_dataloader(self):
-        return DataLoader(self.train_set, self.batch_size)
+        return DataLoader(self.train_set, self.batch_size, shuffle=True)
 
     def val_dataloader(self):
         return DataLoader(self.val_set, self.batch_size)

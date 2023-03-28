@@ -1,43 +1,59 @@
 # imports 
-from utils.MedicalDecathlonClass import MedicalDecathlonDataModule
-import time
-from pathlib import Path
-from datetime import datetime
-
+from utils.data_class import MedicalDecathlonDataModule
 import torch
-from torch.utils.data import random_split, DataLoader
 import monai
-import gdown
-import pandas as pd
-import torchio as tio
-import pytorch_lightning as pl
-import matplotlib.pyplot as plt
-import seaborn as sns
+from utils.training_funcs import training_loop
+from utils.args import get_args
 
-plt.rcParams['figure.figsize'] = 12, 8
-monai.utils.set_determinism()
+args = get_args()
 
-print('Last run on', time.ctime())
+# Data definition
+print('\nLoading and preparing the dataloaders...')
+data = MedicalDecathlonDataModule(
+    task=args.task,
+    google_id=args.google_id,
+    batch_size=args.batch_size,
+    train_val_ratio=args.train_val_ratio,
+)
 
-# extra imports
-import argparse
+data.prepare_data()
+data.setup()
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-task", help="Task to run for the training of the model", type=str, default='Task04_Hippocampus')
-parser.add_argument("-google_id", help="Google drive id for the datas", type=str, default="1RzPB1_bqzQhlWvU-YGvZzhx2omcDh38C")
-parser.add_argument("-batch_size", help="Batch size for the training", type=int, default=16)
-parser.add_argument("-train_val_ratio", help="Ratio of the training set to the validation set", type=float, default=0.8)
-parser.add_argument("-epochs", help="Number of epochs for the training", type=int, default=100)
-parser.add_argument("-lr", help="Learning rate for the training", type=float, default=0.001)
-parser.add_argument("-early_stopping", help="Early stopping for the training. -1 if you don't want to use Early Stopping, else choose an integer number that will represent the patience.", type=int, default=10)
-parser.add_argument("-best_models_dir", help="Directory where the best models will be saved", type=str, default='best_models')
+train_data_loader = data.train_dataloader()
+val_data_loader = data.val_dataloader()
+test_data_loader = data.test_dataloader()
 
-args = parser.parse_args()
+print('\nDefining the model, the loss and the optimizer...')
+# model, loss and optimizer definition
+unet = monai.networks.nets.UNet(
+    dimensions=3,
+    in_channels=1,
+    out_channels=3,
+    channels=(8, 16, 32, 64),
+    strides=(2, 2, 2),
+)
 
-# asserts 
-assert args.batch_size > 0, 'Batch size must be greater than 0'
-assert args.train_val_ratio > 0 and args.train_val_ratio < 1, 'Train val ratio must be between 0 and 1'
-assert args.epochs > 0, 'Epochs must be greater than 0'
-assert args.lr > 0, 'Learning rate must be greater than 0'
-assert isinstance(args.early_stopping, int), 'Early stopping must be an integer'
-assert (args.early_stopping >= -1) and (args.early_stopping != 0), 'Early stopping can be -1 or greater than 0'
+model = unet
+criterion=monai.losses.DiceCELoss(softmax=True)
+optimizer=torch.optim.AdamW(model.parameters(), lr=args.lr)
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+# training loop
+print('\nStarting the training loop...\n')
+training_loop(
+    train_data_loader=train_data_loader,
+    val_data_loader=val_data_loader,
+    device=device,
+    model=model,
+    criterion=criterion,
+    optimizer=optimizer,
+    epochs=args.epochs,
+    early_stopping=args.early_stopping,
+    train_from_checkpoint=args.train_from_checkpoint,
+    fine_tune=args.fine_tune,
+    best_models_dir=args.best_models_dir,
+    mixed_precision=args.mixed_precision,
+    Nit=args.Nit,
+)
+
