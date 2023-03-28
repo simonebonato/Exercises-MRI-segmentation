@@ -2,11 +2,16 @@
 from utils.data_class import MedicalDecathlonDataModule
 import torch
 import monai
-from utils.training_funcs import training_loop
+from utils.trainer_class import Trainer
 from utils.args import get_args
+from utils.other_utils import assert_config
 
 # Get the arguments from the command line
 args = get_args()
+assert_config(args.__dict__)
+
+# set the random seed
+torch.manual_seed(args.random_seed)
 
 # Data definition and preparation following the steps in the tutorial
 # https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=pHXXLvDM8g6U
@@ -41,20 +46,16 @@ optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# training loop
-print("\nStarting the training loop...\n")
-training_loop(
+# define trainer
+trainer = Trainer(
     train_data_loader=train_data_loader,
     val_data_loader=val_data_loader,
-    device=device,
     model=model,
     criterion=criterion,
     optimizer=optimizer,
-    epochs=args.epochs,
-    early_stopping=args.early_stopping,
-    train_from_checkpoint=args.train_from_checkpoint,
-    fine_tune=args.fine_tune,
-    best_models_dir=args.best_models_dir,
-    mixed_precision=args.mixed_precision,
-    Nit=args.Nit,
+    device=device,
+    **args.__dict__,
 )
+
+# training loop
+trainer.training_loop()

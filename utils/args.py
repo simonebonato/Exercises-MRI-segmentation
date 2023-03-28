@@ -28,7 +28,7 @@ def get_args():
         "-epochs", help="Number of epochs for the training", type=int, default=100
     )
     parser.add_argument(
-        "-lr", help="Learning rate for the training", type=float, default=0.001
+        "-lr", help="Learning rate for the training", type=float, default=0.01
     )
     parser.add_argument(
         "-early_stopping",
@@ -58,7 +58,7 @@ def get_args():
         "-mixed_precision",
         help="Use mixed precision for the training",
         type=bool,
-        default=False,
+        default=True,
     )
     parser.add_argument(
         "-Nit", help="Number of iterations for the training", type=int, default=None
@@ -68,17 +68,5 @@ def get_args():
     )
 
     args = parser.parse_args()
-
-    # asserts
-    assert args.batch_size > 0, "Batch size must be greater than 0"
-    assert (
-        args.train_val_ratio > 0 and args.train_val_ratio < 1
-    ), "Train val ratio must be between 0 and 1"
-    assert args.epochs > 0, "Epochs must be greater than 0"
-    assert args.lr > 0, "Learning rate must be greater than 0"
-    assert isinstance(args.early_stopping, int), "Early stopping must be an integer"
-    assert (args.early_stopping >= -1) and (
-        args.early_stopping != 0
-    ), "Early stopping can be -1 or greater than 0"
 
     return args
