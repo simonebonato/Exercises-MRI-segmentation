@@ -1,7 +1,7 @@
 # Exercises-MRI-segmentation
 
 Here is the structure of the following repo:
-- main.py --> contains the functions to run the training from the command prompt, but in order to see the possible arguments for the function you might refer to the file "utils/args.py" or the list below.
+- main.py &rarr; contains the functions to run the training from the command prompt, but in order to see the possible arguments for the function you might refer to the file "utils/args.py" or the list below.
 - main.ipynb --> a simple notebook where the code can be run step-by-step. On top you can find a dictionary called "config" where you can define the values you want to use for your run. So after preparing the data, it runs the training, and after follows the testing of the model on some unseen data.
 - The "utils" folder contains a series of .py files:
   * trainer_class.py -> contains the the most important part of the code. Here is where the Trainer class is defined, and after definig the data, model, loss, optimizer etc. this has to be used to start the training. The code does the same as in this [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37) wrt to the training, but is made using normal pytorch code. I decided to make it a bit modular for clarity, so the main part is the function "training_loop", but "forward_pass" and "backward_pass" are separate functions. So first it's necessary to define a Trainer object, and then to start the training use "Trainer.training_loop()".
