@@ -46,7 +46,7 @@ Here is the structure of the following repo:
     -random_seed int      Random seed for the training (default: 42)
 # Proposed solutions
 ## Exercise 1 
-- Write a training code for a similar training as in the tutorial, but without the pytorch_lightning library.
+- Write a training code for a similar training as in the [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37), but without the pytorch_lightning library.
 
 The code where I made the training loop without using PytorchLightning can be found inside "utils/trainer_class.py" under the Trainer class inside the training_loop function.
 - Make one script with a command line for training.
