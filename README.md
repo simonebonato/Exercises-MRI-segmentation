@@ -6,7 +6,7 @@ Here is the structure of the following repo:
 - The "utils" folder contains a series of .py files:
   * trainer_class.py -> contains the the most important part of the code. Here is where the Trainer class is defined, and after definig the data, model, loss, optimizer etc. this has to be used to start the training. The code does the same as in this [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37) wrt to the training, but is made using normal pytorch code. I decided to make it a bit modular for clarity, so the main part is the function "training_loop", but "forward_pass" and "backward_pass" are separate functions. So first it's necessary to define a Trainer object, and then to start the training use "Trainer.training_loop()".
   * data_class.py --> contain the same Lightning module for the dataloader as in the [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37), I simply copied the code so that I could load the DataLoaders with the relative transformations.
-  * args.py --> like I said above, it containes the argparse function to run the code from terminal when using "main.py".
+  * args.py --> it containes the argparse function to run the code from terminal when using "main.py".
   * other_utils.py --> file with a utility function to assert that the values in the config dict or argparse are correct, and a plotting function.
   
   Argparse arguments for main.py
@@ -47,11 +47,14 @@ Here is the structure of the following repo:
 # Proposed solutions
 ## Exercise 1 
 - Write a training code for a similar training as in the tutorial, but without the pytorch_lightning library.
+
 The code where I made the training loop without using PytorchLightning can be found inside "utils/trainer_class.py" under the Trainer class inside the training_loop function.
 - Make one script with a command line for training.
+
 It is possible to run the code as a single command line script using "main.py" and the possible flags can be seen in the list above. 
 - In the training loop use the automatic mixed precision from Pytorch (with autocast and
 GradScaler) in order to train with FP16 precision instead of the default FP32.
+
 If you want to start the training using mixed precision, you just have to run the code with the code setting up the flag for it `python main.py -mixed_precision True`. Here are the parts where this is implemented
 
 In the training setup, the scaler is defined, however the argument "mixed_precision" enables the scaler or not so during the training this remains flexible.
@@ -63,15 +66,21 @@ Finally when performing the backward pass, only if the scaler is enabled, the gr
 
 
 ## Exercise 2
+- Implement an option to perform a fine-tuning strategy: load a previously saved model, or start from random weights, and freeze all layer parameters for the Unet model except the last classification layer.
+
 This is implemented inside the Trainer class in the training_setup function. 
 
-In order to start the training from a chekpoint, it is simply necessary to set up an argument in the argparser (or config file in the .ipynb) called "train_from_checkpoint" `python main.py -train_from_checkpoint YOUR_CKPT_PATH`, if it is left as None, then the weights are randomly initialize, else they are loaded from the checkpoint path.
+In order to start the training from a chekpoint, it is simply necessary to set up an argument in the argparser (or config file in the .ipynb) called "train_from_checkpoint" `python main.py -train_from_checkpoint YOUR_CKPT_PATH`, if it is left as None, then the weights are randomly initialized, else they are loaded from the checkpoint path.
 
 If instead you want to perform fine-tuning, you just have to setup the flag "fine_tune" as True when running the code `python main.py -fine_tune True`. As seen in the picture below, the last 2 layers of weights (corresponding to the last convolutional layer and its bias) are frozen (setting the flag "requires_grad" to False).
 
 ![image](https://user-images.githubusercontent.com/63954877/228523902-67781b87-ca1f-4eab-95f1-224e4e41802c.png)
 ## Exercise 3
-The proposed solution consists in adding a flag called "Nit", if is None, then all the batches for each epochs are run, otherwise the model will run only the set number of iterations. 
+- Because we used a strong data augmentation strategy (thanks to Torchio), the dataset length does not need to be equal to the real length. Indeed, in the nnUnet paper they proposed to train always with the same scheme : 1000 epoch of 250 iterations.
+- Make the necessary changes so that the training epoch is always Nit iterations (i.e. Nit*batch size training volumes).
+- Make sure that all training samples are equiprobably chosen, whatever the chosen Nit value.
+
+The proposed solution consists in adding a flag called "Nit", if is None, then all the batches for each epochs are run, otherwise the model will run only the set number of iterations (eg. `python main.py -Nit 8` will run only 8 iterations/batches per epoch).
 
 To make sure that all samples have equal probabilities of being chosen I added the flag shuffle=True to the "train_dataloader" function inside "utils.data_class"; this ensure that samples are always shuffled before making the batches and hence they have the same probability of being chosen even if not all the batches are processed in the epoch.
 
