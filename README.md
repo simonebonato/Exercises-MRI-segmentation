@@ -65,9 +65,9 @@ Finally when performing the backward pass, only if the scaler is enabled, the gr
 ## Exercise 2
 This is implemented inside the Trainer class in the training_setup function. 
 
-In order to start the training from a chekpoint, it is simply necessary to set up an argument in the argparser (or config file in the .ipynb) called "train_from_checkpoint", if it is left as None, then the weights are randomly initialize, else they are loaded from the checkpoint path.
+In order to start the training from a chekpoint, it is simply necessary to set up an argument in the argparser (or config file in the .ipynb) called "train_from_checkpoint" `python main.py -train_from_checkpoint YOUR_CKPT_PATH`, if it is left as None, then the weights are randomly initialize, else they are loaded from the checkpoint path.
 
-If instead you want to perform fine-tuning, you just have to setup the flag "fine-tune" as True when running the code. As seen in the picture below, the last 2 layers of weights (corresponding to the last convolutional layer and its bias) are frozen (setting the flag "requires_grad" to False).
+If instead you want to perform fine-tuning, you just have to setup the flag "fine_tune" as True when running the code `python main.py -fine_tune True`. As seen in the picture below, the last 2 layers of weights (corresponding to the last convolutional layer and its bias) are frozen (setting the flag "requires_grad" to False).
 
 ![image](https://user-images.githubusercontent.com/63954877/228523902-67781b87-ca1f-4eab-95f1-224e4e41802c.png)
 ## Exercise 3
