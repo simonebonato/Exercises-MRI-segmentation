@@ -11,7 +11,7 @@ Here is the structure of the following repo:
   
   Argparse arguments for main.py
   ```
-  usage: args.py [-h] [-task str] [-google_id str] [-batch_size int]
+  usage: main.py [-h] [-task str] [-google_id str] [-batch_size int]
                [-train_val_ratio float] [-epochs int] [-lr float]
                [-early_stopping int] [-train_from_checkpoint str]
                [-fine_tune bool] [-best_models_dir str]
