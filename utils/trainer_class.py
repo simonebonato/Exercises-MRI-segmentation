@@ -5,7 +5,6 @@ import torch.nn as nn
 from typing import Optional
 
 
-
 class Trainer(nn.Module):
     """
     Class for training a model.
@@ -81,7 +80,6 @@ class Trainer(nn.Module):
         print(f"  -Nit: {self.Nit}")
         print(f"  -Random seed: {self.random_seed}\n")
 
-
     def training_setup(self) -> None:
         """
         Defines the model and other variables for the training.
@@ -93,7 +91,6 @@ class Trainer(nn.Module):
         - set up the scaler for mixed precision training, if required
         - prints the number of iterations per epoch if Nit is set
         - create the directory for saving the best models if it doesn't exist
-
 
         """
         # set the random seed
@@ -114,7 +111,7 @@ class Trainer(nn.Module):
 
         # setting up the scaler for mixed precision training, if required
         self.scaler = torch.cuda.amp.GradScaler(enabled=self.mixed_precision)
-        
+
         # prints the number of iterations per epoch if Nit is set
         if self.Nit is not None:
             print(
@@ -127,7 +124,7 @@ class Trainer(nn.Module):
                 f"Creating directory {self.best_models_dir} for saving the best models...\n"
             )
             os.makedirs(self.best_models_dir)
-        
+
         self.print_trainer_summary()
 
     def forward_pass(self, batch: dict) -> torch.Tensor:
@@ -200,20 +197,18 @@ class Trainer(nn.Module):
             self.model.train()
             for idx, batch in enumerate(self.train_data_loader):
                 # stop the training for this epoch if Nit is specified and reached
-                if idx is not None and idx == self.Nit:
+                if self.Nit is not None and idx == self.Nit:
                     break
                 # check if mixed precision is required
-                with torch.cuda.amp.autocast(dtype=torch.float16, enabled=self.mixed_precision, cache_enabled=False):
+                with torch.cuda.amp.autocast(dtype=torch.float16, enabled=self.mixed_precision, cache_enabled=False):  # type: ignore
                     loss = self.forward_pass(batch)
-
                 self.backward_pass(loss)
-
             # validation loop
-            self.model.eval()  
+            self.model.eval()
             # no need to compute the gradients for the validation loop
             with torch.no_grad():
                 for batch in self.val_data_loader:
-                    with torch.cuda.amp.autocast(dtype=torch.float16, enabled=self.mixed_precision, cache_enabled=False):
+                    with torch.cuda.amp.autocast(dtype=torch.float16, enabled=self.mixed_precision, cache_enabled=False):  # type: ignore
                         val_loss = self.forward_pass(batch)
 
             print(
@@ -229,7 +224,7 @@ class Trainer(nn.Module):
                     os.path.join(self.best_models_dir, f"best_model.pth"),
                 )
 
-            elif self.early_stopping != -1:
+            elif self.early_stopping is not None:
                 patience_counter += 1  # increase patience counter
                 if (
                     patience_counter == self.early_stopping

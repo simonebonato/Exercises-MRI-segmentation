@@ -31,6 +31,7 @@ class MedicalDecathlonDataModule(pl.LightningDataModule):
 
     def download_data(self):
         if not self.dataset_dir.is_dir():
+            print("Downloading dataset...\n")
             url = f"https://drive.google.com/uc?id={self.google_id}"
             output = f"{self.task}.tar"
             gdown.download(url, output, quiet=False)

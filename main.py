@@ -43,7 +43,6 @@ model = monai.networks.nets.UNet(
 
 criterion = monai.losses.DiceCELoss(softmax=True)
 optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr)
-
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # define trainer

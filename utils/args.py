@@ -1,8 +1,18 @@
 import argparse
 
 
+class CustomFormatter(
+    argparse.ArgumentDefaultsHelpFormatter,  # preserve formatting of help text
+    argparse.MetavarTypeHelpFormatter,  # provide type information in help text
+):
+    pass
+
+
 def get_args():
-    parser = argparse.ArgumentParser()
+    """
+    Get the arguments from the command line.
+    """
+    parser = argparse.ArgumentParser(formatter_class=CustomFormatter)
     parser.add_argument(
         "-task",
         help="Task to run for the training of the model",
@@ -32,9 +42,9 @@ def get_args():
     )
     parser.add_argument(
         "-early_stopping",
-        help="Early stopping for the training. -1 if you don't want to use Early Stopping, else choose an integer number that will represent the patience.",
+        help="Early stopping for the training. None if you don't want to use Early Stopping, else choose an integer number > 0 that will represent the patience.",
         type=int,
-        default=10,
+        default=None,
     )
     parser.add_argument(
         "-train_from_checkpoint",
