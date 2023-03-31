@@ -5,7 +5,8 @@ import numpy as np
 from numpy import ndarray
 from matplotlib.image import AxesImage
 
-def read_json(file_path: str="config.json") -> dict:
+
+def read_json(file_path: str = "config.json") -> dict:
     """
     Reads a json file and returns the content as a dictionary.
 
@@ -16,7 +17,7 @@ def read_json(file_path: str="config.json") -> dict:
     :return: Dictionary containing the content of the json file
 
     """
-    
+
     with open(file_path, "r") as f:
         content = json.load(f)
     return content
@@ -54,6 +55,7 @@ def assert_config(config: dict) -> None:
         or config["train_from_checkpoint"] is None
     ), "Train from checkpoint must be a string or None"
 
+
 def get_patches_legend(x: AxesImage, label: ndarray):
     """
     Returns a list of patches to be used as a legend in the plot.
@@ -66,15 +68,26 @@ def get_patches_legend(x: AxesImage, label: ndarray):
     :return: List of patches to be used as a legend in the plot
 
     """
-    labels = {1: "Anterior", 2:"Posterior"}
+    labels = {1: "Anterior", 2: "Posterior"}
     colors = x.cmap(x.norm(np.unique(label)))
-    patches = [plt.plot([],[], marker="o", ms=10, ls="", mec=None, color=colors[i],
-                label=f"{labels[i]}")[0] for i in range(len(colors))[1:]]
+    patches = [
+        plt.plot(
+            [],
+            [],
+            marker="o",
+            ms=10,
+            ls="",
+            mec=None,
+            color=colors[i],
+            label=f"{labels[i]}",
+        )[0]
+        for i in range(len(colors))[1:]
+    ]
     return patches
 
 
 def plot_image_label(
-    batch_image: ndarray, batch_label: ndarray, slice_idx: int, legend: bool=False
+    batch_image: ndarray, batch_label: ndarray, slice_idx: int, legend: bool = False
 ) -> None:
     """
     Plots the image and the label of a batch, and the image with the label overlaid.
@@ -103,7 +116,7 @@ def plot_image_label(
     if legend:
         # create legend for labels
         patches = get_patches_legend(x, label)
-        plt.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0. )
+        plt.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.0)
 
     # image + label plot
     plt.subplot(1, 3, 3)
@@ -113,7 +126,7 @@ def plot_image_label(
 
     if legend:
         patches = get_patches_legend(x, label)
-        plt.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0. )
+        plt.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.0)
 
     plt.tight_layout()
     plt.show()

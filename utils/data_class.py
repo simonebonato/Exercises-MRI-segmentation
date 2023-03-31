@@ -6,7 +6,7 @@ from pathlib import Path
 import numpy as np
 
 
-class MedicalDecathlonDataModule():
+class MedicalDecathlonDataModule:
     def __init__(self, task, google_id, batch_size, train_val_ratio):
         self.task = task
         self.google_id = google_id
