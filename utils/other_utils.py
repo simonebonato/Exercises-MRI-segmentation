@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 from numpy import ndarray
 import json
+import numpy as np
+from numpy import ndarray
+from matplotlib.image import AxesImage
 
 def read_json(file_path: str="config.json") -> dict:
     """
@@ -51,9 +54,27 @@ def assert_config(config: dict) -> None:
         or config["train_from_checkpoint"] is None
     ), "Train from checkpoint must be a string or None"
 
+def get_patches_legend(x: AxesImage, label: ndarray):
+    """
+    Returns a list of patches to be used as a legend in the plot.
+
+    Parameters
+    :arg x: AxesImage object to get the colormap from
+    :arg label: Label array
+
+    Returns
+    :return: List of patches to be used as a legend in the plot
+
+    """
+    labels = {1: "Anterior", 2:"Posterior"}
+    colors = x.cmap(x.norm(np.unique(label)))
+    patches = [plt.plot([],[], marker="o", ms=10, ls="", mec=None, color=colors[i],
+                label=f"{labels[i]}")[0] for i in range(len(colors))[1:]]
+    return patches
+
 
 def plot_image_label(
-    batch_image: ndarray, batch_label: ndarray, slice_idx: int
+    batch_image: ndarray, batch_label: ndarray, slice_idx: int, legend: bool=False
 ) -> None:
     """
     Plots the image and the label of a batch, and the image with the label overlaid.
@@ -65,15 +86,34 @@ def plot_image_label(
 
     """
 
-    plt.figure(figsize=(12, 6))
+    image = batch_image[1, 0, :, :, slice_idx]
+    label = batch_label[1, 0, :, :, slice_idx]
+
+    # image plot
+    plt.figure(figsize=(15, 6))
     plt.subplot(1, 3, 1)
     plt.title("image")
-    plt.imshow(batch_image[0, 0, :, :, slice_idx], cmap="gray")
+    plt.imshow(image, cmap="gray")
+
+    # label plot
     plt.subplot(1, 3, 2)
     plt.title("label")
-    plt.imshow(batch_label[0, 0, :, :, slice_idx], cmap="gray")
+    x = plt.imshow(label, cmap="gray", interpolation="none")
+
+    if legend:
+        # create legend for labels
+        patches = get_patches_legend(x, label)
+        plt.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0. )
+
+    # image + label plot
     plt.subplot(1, 3, 3)
     plt.title("image + label")
-    plt.imshow(batch_image[0, 0, :, :, slice_idx], cmap="gray")
-    plt.imshow(batch_label[0, 0, :, :, slice_idx], alpha=0.5)
+    plt.imshow(image, cmap="gray")
+    x = plt.imshow(label, alpha=0.5, cmap="jet", interpolation="none")
+
+    if legend:
+        patches = get_patches_legend(x, label)
+        plt.legend(handles=patches, bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0. )
+
+    plt.tight_layout()
     plt.show()
