@@ -36,8 +36,8 @@ Here is the arguments for using the code in main.py:
                             (default: best_models)
     -mixed_precision bool
                             Use mixed precision for the training (default: True)
-    -Nit int              Number of iterations for the training (default: None)
-    -random_seed int      Random seed for the training (default: 42)
+    -Nit int              Number of iterations (training batches) to run for each epoch. None if you want to run all of them. (default: None)
+    -random_seed int      Random seed for consistent training (default: 42)
  
 ## Repo structure
 Here is the structure of the following repo:
