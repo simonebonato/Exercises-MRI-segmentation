@@ -1,17 +1,17 @@
 # Exercises-MRI-segmentation
 
 Here is the structure of the following repo:
-- main.py &rarr; contains the functions to run the training from the command prompt, but in order to see the possible arguments for the function you might refer to the file "utils/args.py" or the list below.
-- main.ipynb &rarr; a simple notebook where the code can be run step-by-step. On top you can find a dictionary called "config" where you can define the values you want to use for your run. So after preparing the data, it runs the training, and after follows the testing of the model on some unseen data.
-- The "utils" folder contains a series of .py files:
-  * trainer_class.py -> contains the the most important part of the code. Here is where the Trainer class is defined, and after definig the data, model, loss, optimizer etc. this has to be used to start the training. The code does the same as in this [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37) wrt to the training, but is made using normal pytorch code. I decided to make it a bit modular for clarity, so the main part is the function "training_loop", but "forward_pass" and "backward_pass" are separate functions. So first it's necessary to define a Trainer object, and then to start the training use "Trainer.training_loop()".
-  * data_class.py &rarr; contain the same Lightning module for the dataloader as in the [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37), I simply copied the code so that I could load the DataLoaders with the relative transformations.
-  * args.py &rarr; it containes the argparse function to run the code from terminal when using "main.py".
-  * other_utils.py &rarr; file with a utility function to assert that the values in the config dict or argparse are correct, and a plotting function.
+- **main.py** &rarr; contains the functions to run the training from the command prompt, but in order to see the possible arguments for the function you might refer to the file "utils/args.py" or the list below.
+- **main.ipynb** &rarr; a simple notebook where the code can be run step-by-step. On top you can find a dictionary called "config" where you can define the **values you want** to use for your run. So after preparing the data, it runs the training, and after follows the testing of the model on some unseen data.
+- The **utils** folder contains a series of .py files:
+  * **trainer_class.py** &rarr; contains the the most important part of the code. Here is where the Trainer class is defined, and after definig the data, model, loss, optimizer etc. this has to be used to start the training. The code does the same as in this [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37) wrt to the training, but is made using normal pytorch code. I decided to make it a bit modular for clarity, so the main part is the function "training_loop", but "forward_pass" and "backward_pass" are separate functions. So first it's necessary to define a Trainer object, and then to start the training use "Trainer.training_loop()".
+  * **data_class.py** &rarr; contain the same Lightning module for the dataloader as in the [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37), I simply copied the code so that I could load the DataLoaders with the relative transformations.
+  * **args.py** &rarr; it containes the argparse function to run the code from terminal when using "main.py".
+  * **other_utils.py** &rarr; file with a utility function to assert that the values in the config dict or argparse are correct, and a plotting function.
   
   Argparse arguments for main.py
   ```
-  usage: args.py [-h] [-task str] [-google_id str] [-batch_size int]
+  usage: main.py [-h] [-task str] [-google_id str] [-batch_size int]
                [-train_val_ratio float] [-epochs int] [-lr float]
                [-early_stopping int] [-train_from_checkpoint str]
                [-fine_tune bool] [-best_models_dir str]
@@ -46,7 +46,7 @@ Here is the structure of the following repo:
     -random_seed int      Random seed for the training (default: 42)
 # Proposed solutions
 ## Exercise 1 
-- Write a training code for a similar training as in the tutorial, but without the pytorch_lightning library.
+- Write a training code for a similar training as in the [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37), but without the pytorch_lightning library.
 
 The code where I made the training loop without using PytorchLightning can be found inside "utils/trainer_class.py" under the Trainer class inside the training_loop function.
 - Make one script with a command line for training.
