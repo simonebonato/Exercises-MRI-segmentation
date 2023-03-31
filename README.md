@@ -52,7 +52,7 @@ Here is the structure of the following repo:
   * **data_class.py** &rarr; contains the same functions for the dataloader as in the [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37), I simply copied the code so that I could load the DataLoaders with the relative transformations.
   * **args.py** &rarr; it containes the argparse function to run the code from terminal when using "main.py".
   * **other_utils.py** &rarr; file with a utility function to assert that the values in the config dict or argparse are correct, a plotting function, and the function to read the config.json file.
-- The **best_models** folder contains the weights of the previously trained models. They can be loaded directly to start the training from a checkpoint using the flag `-train_from_checkpoint` as shown above.
+- The **best_models** folder contains the weights of the previously trained models. They can be loaded directly to start the training from a checkpoint using the flag `python main.py -train_from_checkpoint YOUR_CKPT_PATH`.
   
  
 ## Proposed solutions
