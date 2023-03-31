@@ -1,0 +1,17 @@
+{
+"task": "Task04_Hippocampus", 
+"google_id": "1RzPB1_bqzQhlWvU-YGvZzhx2omcDh38C", 
+
+"batch_size": 16, 
+"train_val_ratio": 0.8, 
+"epochs": 10, 
+"lr": 0.01, 
+"early_stopping": null, 
+"mixed_precision": true,
+
+"Nit": null, 
+"train_from_checkpoint": null, 
+"fine_tune": false, 
+"best_models_dir": "best_models", 
+"random_seed": 42
+}
