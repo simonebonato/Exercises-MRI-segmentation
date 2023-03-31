@@ -1,14 +1,13 @@
 import os
 import torchio as tio
-import pytorch_lightning as pl
 from torch.utils.data import DataLoader, random_split
 import gdown
 from pathlib import Path
+import numpy as np
 
 
-class MedicalDecathlonDataModule(pl.LightningDataModule):
+class MedicalDecathlonDataModule():
     def __init__(self, task, google_id, batch_size, train_val_ratio):
-        super().__init__()
         self.task = task
         self.google_id = google_id
         self.batch_size = batch_size
@@ -23,8 +22,6 @@ class MedicalDecathlonDataModule(pl.LightningDataModule):
         self.test_set = None
 
     def get_max_shape(self, subjects):
-        import numpy as np
-
         dataset = tio.SubjectsDataset(subjects)
         shapes = np.array([s.spatial_shape for s in dataset])
         return shapes.max(axis=0)
