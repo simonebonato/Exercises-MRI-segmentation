@@ -1,5 +1,22 @@
 import matplotlib.pyplot as plt
 from numpy import ndarray
+import json
+
+def read_json(file_path: str="config.json") -> dict:
+    """
+    Reads a json file and returns the content as a dictionary.
+
+    Parameters
+    :arg file_path: Path to the json file
+
+    Returns
+    :return: Dictionary containing the content of the json file
+
+    """
+    
+    with open(file_path, "r") as f:
+        content = json.load(f)
+    return content
 
 
 def assert_config(config: dict) -> None:
