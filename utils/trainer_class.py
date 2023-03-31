@@ -3,6 +3,7 @@ import os
 import torch
 import torch.nn as nn
 from typing import Optional
+import time
 
 
 class Trainer(nn.Module):
@@ -59,6 +60,9 @@ class Trainer(nn.Module):
         self.fine_tune = fine_tune
         self.mixed_precision = mixed_precision
         self.best_models_dir = best_models_dir
+
+        date = time.strftime("%Y_%m_%d")
+        self.save_name = f"{date}_{self.model._get_name()}_{self.criterion._get_name()}"
 
         self.training_setup()
 
@@ -200,7 +204,7 @@ class Trainer(nn.Module):
                 if self.Nit is not None and idx == self.Nit:
                     break
                 # check if mixed precision is required
-                with torch.cuda.amp.autocast(dtype=torch.float16, enabled=self.mixed_precision, cache_enabled=False):  # type: ignore
+                with torch.cuda.amp.autocast(dtype=torch.float16, enabled=self.mixed_precision, cache_enabled=False):         
                     loss = self.forward_pass(batch)
                 self.backward_pass(loss)
             # validation loop
@@ -208,11 +212,11 @@ class Trainer(nn.Module):
             # no need to compute the gradients for the validation loop
             with torch.no_grad():
                 for batch in self.val_data_loader:
-                    with torch.cuda.amp.autocast(dtype=torch.float16, enabled=self.mixed_precision, cache_enabled=False):  # type: ignore
+                    with torch.cuda.amp.autocast(dtype=torch.float16, enabled=self.mixed_precision, cache_enabled=False):  
                         val_loss = self.forward_pass(batch)
 
             print(
-                f"Epoch {epoch + 1}/{self.epochs}, train loss: {loss.item():.4f}, val loss: {val_loss.item():.4f}"
+                f"Epoch {epoch + 1}/{self.epochs}, train loss: {loss.item():.4f}, val loss: {val_loss.item():.4f}"         
             )
 
             # early stopping and saving the best model
@@ -221,7 +225,7 @@ class Trainer(nn.Module):
                 patience_counter = 0  # set patience counter to 0
                 torch.save(
                     self.model.state_dict(),
-                    os.path.join(self.best_models_dir, f"best_model.pth"),
+                    os.path.join(self.best_models_dir, f"{self.save_name}_best_model.pth"),
                 )
 
             elif self.early_stopping is not None:
@@ -238,5 +242,5 @@ class Trainer(nn.Module):
         )
         torch.save(
             self.model.state_dict(),
-            os.path.join(self.best_models_dir, f"last_model.pth"),
+            os.path.join(self.best_models_dir, f"{self.save_name}_last_model.pth"),
         )
