@@ -57,7 +57,7 @@ Here is the structure of the following repo:
  
 ## Proposed solutions
 ### Exercise 1 
-- Write a training code for a similar training as in the [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37), but without the pytorch_lightning library.
+#### Write a training code for a similar training as in the [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37), but without the pytorch_lightning library.
 
 The code where I made the training loop without using PytorchLightning can be found inside "utils/trainer_class.py" under the Trainer class inside the training_loop function.
 - Make one script with a command line for training.
@@ -77,7 +77,7 @@ Finally when performing the backward pass, only if the scaler is enabled, the gr
 
 
 ### Exercise 2
-- Implement an option to perform a fine-tuning strategy: load a previously saved model, or start from random weights, and freeze all layer parameters for the Unet model except the last classification layer.
+#### Implement an option to perform a fine-tuning strategy: load a previously saved model, or start from random weights, and freeze all layer parameters for the Unet model except the last classification layer.
 
 This is implemented inside the Trainer class in the training_setup function. 
 
@@ -87,9 +87,9 @@ If instead you want to perform fine-tuning, you just have to setup the flag "fin
 
 ![image](https://user-images.githubusercontent.com/63954877/228523902-67781b87-ca1f-4eab-95f1-224e4e41802c.png)
 ### Exercise 3
-- Because we used a strong data augmentation strategy (thanks to Torchio), the dataset length does not need to be equal to the real length. Indeed, in the nnUnet paper they proposed to train always with the same scheme : 1000 epoch of 250 iterations.
-- Make the necessary changes so that the training epoch is always Nit iterations (i.e. Nit*batch size training volumes).
-- Make sure that all training samples are equiprobably chosen, whatever the chosen Nit value.
+#### Because we used a strong data augmentation strategy (thanks to Torchio), the dataset length does not need to be equal to the real length. Indeed, in the nnUnet paper they proposed to train always with the same scheme : 1000 epoch of 250 iterations.
+#### Make the necessary changes so that the training epoch is always Nit iterations (i.e. Nit*batch size training volumes).
+#### Make sure that all training samples are equiprobably chosen, whatever the chosen Nit value.
 
 The proposed solution consists in adding a flag called "Nit", if is None, then all the batches for each epochs are run, otherwise the model will run only the set number of iterations (eg. `python main.py -Nit 8` will run only 8 iterations/batches per epoch).
 
