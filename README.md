@@ -60,10 +60,10 @@ Here is the structure of the following repo:
 #### Write a training code for a similar training as in the [tutorial](https://colab.research.google.com/github/fepegar/torchio-notebooks/blob/main/notebooks/TorchIO_MONAI_PyTorch_Lightning.ipynb#scrollTo=KuhTaRl3vf37), but without the pytorch_lightning library.
 
 The code where I made the training loop without using PytorchLightning can be found inside "utils/trainer_class.py" under the Trainer class inside the training_loop function.
-- Make one script with a command line for training.
+#### Make one script with a command line for training.
 
 It is possible to run the code as a single command line script using "main.py" and the possible flags can be seen in the "Usage" section above. 
-- In the training loop use the automatic mixed precision from Pytorch (with autocast and
+#### In the training loop use the automatic mixed precision from Pytorch (with autocast and
 GradScaler) in order to train with FP16 precision instead of the default FP32.
 
 If you want to start the training using mixed precision, you just have to run the code with the code setting up the flag for it `python main.py -mixed_precision True`. Here are the parts where this is implemented
